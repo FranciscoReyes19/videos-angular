@@ -17,7 +17,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="#" *ngIf="identity" >Guardar favoritos</a>
+        <a class="nav-link" *ngIf="identity" [routerLink] = "['/new-video']">Guardar favoritos</a>
       </li>
 
     </ul>
@@ -40,7 +40,7 @@
           {{identity.name + ' ' + identity.surname}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Ajustes</a>
+          <a class="dropdown-item" [routerLink] = "['/ajustes']">Ajustes</a>
           <a class="dropdown-item" [routerLink] = "['/logout/1']">Salir</a>
         </div>
       </li>
