@@ -14,9 +14,9 @@ export class HomeComponent implements OnInit {
 	public identity;
   public token;
   public videos;
-  public page;
-  public next_page;
-  public prev_page;
+  public page:number;
+  public next_page:number;
+  public prev_page:number;
   public number_pages;
 
   constructor(
@@ -26,10 +26,15 @@ export class HomeComponent implements OnInit {
     private _router: Router
     ) {
         this.page_title = "Mis videos";
+
       }
 
   ngOnInit(){
     this.loadUser();
+    this.actualPage();
+  }
+
+  actualPage(){
     this._route.params.subscribe(params => {  
       var page = +params['page'];
       if (!page) {
@@ -49,6 +54,31 @@ export class HomeComponent implements OnInit {
     this._videoService.getVideos(this.token,page_param).subscribe(
       response => {
         this.videos = response.videos;
+
+        var number_pages = [];
+        for( var i = 1; i<= response.total_pages;i++){
+          number_pages.push(i);
+        }
+        this.number_pages = number_pages;
+
+        if (this.page >= 2) {
+          this.prev_page = this.page-1;
+        }else{
+          this.prev_page = 1;
+        }
+        if (this.page < response.total_pages) {
+          this.next_page = this.page+1;
+        }else{
+          this.next_page = response.total_pages;
+        }
+        /*
+        items_per_page: 6
+        message: "CORRECTO"
+        page_current: 1
+        status: "success"
+        total_items_count: 10
+        total_pages: 2
+        */
     },
     error => {
         console.log(error);
@@ -74,6 +104,15 @@ export class HomeComponent implements OnInit {
      
        return thumburl;
          
+     }
+     deleteVideo(id){
+       this._videoService.delete(this.token,id).subscribe(
+         response => {
+           this.actualPage();
+         },
+         error => {
+           console.log(error);
+         });
      }
 
 }
